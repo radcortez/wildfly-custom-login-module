@@ -1,0 +1,17 @@
+connect
+
+/subsystem=security/security-domain=CustomSecurityDomain:add(cache-type=default)
+
+reload
+
+/subsystem=security/security-domain=CustomSecurityDomain/authentication=classic: \
+    add( \
+        login-modules=[{ \
+            "code"=>"com.cortez.wildfly.security.CustomLoginModule", \
+            "flag"=>"required", \
+            "module-options"=>[ \
+                ("usersProperties"=>"user.properties"), \
+                ("rolesProperties"=>"roles.properties")] \
+            }])
+
+reload
