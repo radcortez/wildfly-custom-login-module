@@ -50,7 +50,7 @@ public class CustomLoginModuleTest {
                                    .addClass(CustomLoginModule.class)
                                    .addClass(SampleEJB.class)
                                    .addClass(LoginServlet.class)
-                                   .addAsWebInfResource("jboss-web.xml")
+                                   .addAsWebInfResource(new File("src/main/webapp/WEB-INF/jboss-web.xml"), "jboss-web.xml")
                                    .addAsWebInfResource("jboss-ejb3.xml")
                                    .addAsResource("user.properties")
                                    .addAsResource("roles.properties");
