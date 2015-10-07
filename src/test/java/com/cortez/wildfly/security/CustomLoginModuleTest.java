@@ -1,5 +1,7 @@
 package com.cortez.wildfly.security;
 
+import com.cortez.wildfly.security.arquillian.AfterUnDeploy;
+import com.cortez.wildfly.security.arquillian.BeforeDeploy;
 import com.cortez.wildfly.security.ejb.SampleEJB;
 import com.cortez.wildfly.security.servlet.LoginServlet;
 import com.meterware.httpunit.GetMethodWebRequest;
@@ -14,7 +16,6 @@ import org.jboss.as.cli.scriptsupport.CLI;
 import org.jboss.as.protocol.StreamUtils;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.xml.sax.SAXException;
@@ -36,15 +37,18 @@ public class CustomLoginModuleTest {
     @ArquillianResource
     private URL deployUrl;
 
-    @AfterClass
+    @BeforeDeploy
+    public static void addSecurityDomain() {
+        processCliFile(new File("src/test/resources/jboss-add-login-module.cli"));
+    }
+
+    @AfterUnDeploy
     public static void removeSecurityDomain() {
         processCliFile(new File("src/test/resources/jboss-remove-login-module.cli"));
     }
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
-        processCliFile(new File("src/test/resources/jboss-add-login-module.cli"));
-
         WebArchive war = ShrinkWrap.create(WebArchive.class)
                                    .addClass(CustomPrincipal.class)
                                    .addClass(CustomLoginModule.class)
